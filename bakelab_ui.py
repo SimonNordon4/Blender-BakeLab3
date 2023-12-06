@@ -288,3 +288,4 @@ class BakeLabUI(Panel):
             layout.operator("bakelab.finish")
 
 # create an operator to reset the bake state
+print("UI Loaded!!!")
