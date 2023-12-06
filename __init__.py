@@ -11,6 +11,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+#mklink /D "C:\Users\61426\AppData\Roaming\Blender Foundation\Blender\3.6\scripts\addons" "E:\repos\Blender-BakeLab3"
+
 bl_info = {
     "name" : "BakeLab",
     "author" : "Shahzod Boyxonov (specoolar@gmail.com)",

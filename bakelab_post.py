@@ -389,3 +389,14 @@ class BakeLab_Finish(Operator):
         context.scene.BakeLab_Data.clear()
         props.bake_state = 'NONE'
         return {'FINISHED'}
+    
+class CancelBake(Operator):
+    bl_idname = "bakelab.cancel_bake"
+    bl_label = "Cancel Bake"
+    bl_description = "Cancel the baking process"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        props = context.scene.BakeLabProps
+        props.bake_state = 'NONE'
+        return {'FINISHED'}
