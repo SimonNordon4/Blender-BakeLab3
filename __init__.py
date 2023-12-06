@@ -253,13 +253,13 @@ def register():
     bpy.types.Scene.BakeLabMapIndex = IntProperty(name = 'BakeLab Map List Index')
 
 def unregister():
-    for cls in classes:
-        bpy.utils.unregister_class(cls)
-    
-    del bpy.types.Scene.BakeLabProps
-    del bpy.types.Scene.BakeLabMaps
-    del bpy.types.Scene.BakeLab_Data
     del bpy.types.Scene.BakeLabMapIndex
+    del bpy.types.Scene.BakeLab_Data
+    del bpy.types.Scene.BakeLabMaps
+    del bpy.types.Scene.BakeLabProps 
+    
+    for cls in reversed(classes):
+        bpy.utils.unregister_class(cls)   
 
 if __name__ == "__main__":
     register()
