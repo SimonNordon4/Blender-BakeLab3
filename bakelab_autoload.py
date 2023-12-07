@@ -99,20 +99,20 @@ class AutoLoader:
             except ValueError as e:
                 print(f"Failed to register class {cls}: {e}")
 
-        bpy.types.Scene.BakeLabProps = PointerProperty(type = BakeLabProperties)
-        bpy.types.Scene.BakeLabMaps = CollectionProperty(type = bakelab_map.BakeLabMap)
-        bpy.types.Scene.BakeLab_Data = CollectionProperty(type = bakelab_baked_data.BakeLab_BakedData)
-        bpy.types.Scene.BakeLabMapIndex = IntProperty(name = 'BakeLab Map List Index')
+        # bpy.types.Scene.BakeLabProps = PointerProperty(type = BakeLabProperties)
+        # bpy.types.Scene.BakeLabMaps = CollectionProperty(type = bakelab_map.BakeLabMap)
+        # bpy.types.Scene.BakeLab_Data = CollectionProperty(type = bakelab_baked_data.BakeLab_BakedData)
+        # bpy.types.Scene.BakeLabMapIndex = IntProperty(name = 'BakeLab Map List Index')
 
     @staticmethod
     def unregister():
         for cls in AutoLoader.bakelab_classes:
             bpy.utils.unregister_class(cls)
 
-        del bpy.types.Scene.BakeLabProps
-        del bpy.types.Scene.BakeLabMaps
-        del bpy.types.Scene.BakeLab_Data
-        del bpy.types.Scene.BakeLabMapIndex
+        # del bpy.types.Scene.BakeLabProps
+        # del bpy.types.Scene.BakeLabMaps
+        # del bpy.types.Scene.BakeLab_Data
+        # del bpy.types.Scene.BakeLabMapIndex
 
 if __name__ == "__main__":
     AutoLoader.init()

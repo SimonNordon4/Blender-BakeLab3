@@ -11,11 +11,8 @@ from bpy.props import (
             PointerProperty,
             CollectionProperty
         )
-from .bakelab_tools import (
-    SelectObject,
-    SelectObjects,
-    IsValidMesh
-)
+
+import bakelab_tools
 
 def SelectObject(obj):
     bpy.ops.object.select_all(action = 'DESELECT')

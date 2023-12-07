@@ -11,10 +11,13 @@ from bpy.props import (
             PointerProperty,
             CollectionProperty
         )
-from .bakelab_tools import (
-    SelectObject,
-    SelectObjects
-)
+
+import bakelab_tools
+
+# from .bakelab_tools import (
+#     SelectObject,
+#     SelectObjects
+# )
 
 class BakeLab_GenerateMaterials(Operator):
     """Generate materials based on baked datas"""

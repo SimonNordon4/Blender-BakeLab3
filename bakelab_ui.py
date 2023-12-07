@@ -286,6 +286,3 @@ class BakeLabUI(Panel):
             layout.operator("bakelab.apply_displace", icon='RNDCURVE')
             layout.separator()
             layout.operator("bakelab.finish")
-
-# create an operator to reset the bake state
-print("UI Loaded!!!")

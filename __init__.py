@@ -21,13 +21,13 @@ script_dir = os.path.dirname(os.path.realpath(__file__))
 if script_dir not in sys.path:
     sys.path.append(script_dir)
 
-import bakelab_autoload
-if "auto_load" in sys.modules:
-    importlib.reload(bakelab_autoload)
+import bakelab_loader
+if "bakelab_loader" in sys.modules:
+    importlib.reload(bakelab_loader)
 else:
-    import bakelab_autoload
+    import bakelab_loader
 
-from bakelab_autoload import AutoLoader
+from bakelab_loader import Loader
     
 bl_info = {
     "name" : "BakeLab",
@@ -39,13 +39,13 @@ bl_info = {
     "category" : "Baking"
 }
 
-AutoLoader.init()
+Loader.init()
 
 def register():
-    AutoLoader.register()
+    Loader.register()
 
 def unregister():
-    AutoLoader.unregister()
+    Loader.unregister()
 
 if __name__ == "__main__":
     register()

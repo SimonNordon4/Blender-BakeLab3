@@ -19,11 +19,7 @@ from bpy.props import (
 from math import log2
 from os.path import abspath, join, exists
 
-from .bakelab_tools import (
-    SelectObject,
-    SelectObjects,
-    IsValidMesh
-)
+import bakelab_tools
     
 class Baker(Operator):
     """Bake"""

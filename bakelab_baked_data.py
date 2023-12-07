@@ -1,5 +1,15 @@
 import bpy
-from . import bakelab_map
+import bpy
+import importlib
+import sys
+import os
+
+# Append the directory of this script to sys.path to ensure imports work
+script_dir = os.path.dirname(os.path.realpath(__file__))
+if script_dir not in sys.path:
+    sys.path.append(script_dir)
+
+import bakelab_map
 
 from bpy.types import (
             Operator,
