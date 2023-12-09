@@ -14,7 +14,7 @@ from bpy.props import (
 
 import bakelab_tools
 
-# from .bakelab_tools import (
+# from bakelab_tools import (
 #     SelectObject,
 #     SelectObjects
 # )
@@ -209,14 +209,14 @@ class BakeLab_GenerateMaterials(Operator):
                     if obj not in selected_objects:
                         continue
                 
-                SelectObject(obj)
+                bakelab_tools.SelectObject(obj)
                 if props.make_single_user:
                     bpy.ops.object.make_single_user(object=True, obdata=True)
                 if obj.data.uv_layers.active is not None:
                     obj.data.uv_layers.active.active_render = True
                 for slot in obj.material_slots:
                     slot.material = mat
-        SelectObjects(active_obj, selected_objects)
+        bakelab_tools.SelectObjects(active_obj, selected_objects)
         
         if materials_created:
             return {'FINISHED'}
@@ -300,7 +300,7 @@ class BakeLab_ApplyAO(Operator):
                         if obj not in selected_objects:
                             continue
                     
-                    SelectObject(obj)
+                    bakelab_tools.SelectObject(obj)
                     if props.make_single_user:
                         bpy.ops.object.make_single_user(object=True, obdata=True)
                     
@@ -321,7 +321,7 @@ class BakeLab_ApplyAO(Operator):
                         materials_modified = True
                 break
         
-        SelectObjects(active_obj, selected_objects)
+        bakelab_tools.SelectObjects(active_obj, selected_objects)
         if materials_modified:
             return {'FINISHED'}
         else:

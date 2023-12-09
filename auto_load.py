@@ -77,9 +77,11 @@ class AutoLoader():
             if is_package:
                 sub_path = path / module_name
                 sub_root = root + module_name + "."
+                print("Found submodule", sub_root)
                 yield from AutoLoader.iter_submodule_names(sub_path, sub_root)
             else:
                 yield root + module_name
+                print("Found module", root + module_name)
 
 
     # Find classes to register
