@@ -26,7 +26,6 @@ def updateSavePath(self, context):
     if bpy.data.is_saved:
         self.save_path = bpy.path.abspath(self.save_path)
 
-
 class BakeLabProperties(PropertyGroup):
     bake_state: EnumProperty(
             items = (
@@ -183,5 +182,3 @@ class BakeLabProperties(PropertyGroup):
             name = 'Current baking size',
             default = ""
         )
-    
-print("Properties Loaded!")

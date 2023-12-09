@@ -10,6 +10,7 @@ class BakeLabUI(Panel):
     bl_region_type = 'UI'
     bl_context = "objectmode"
     bl_category = "BakeLab"
+    bl_order = 1
 
     def draw(self, context):
         scene = context.scene
@@ -18,8 +19,6 @@ class BakeLabUI(Panel):
         props = scene.BakeLabProps
 
         if props.bake_state == 'NONE':
-            layout.label(text = 'BakeLab 2', icon = 'RENDER_STILL')
-
             col = layout.column()
             col.scale_y = 1.5
             col.operator("bakelab.bake", text = 'Bake', icon='RENDER_STILL')
@@ -220,69 +219,76 @@ class BakeLabUI(Panel):
                             if item.exr_depth == '16':
                                 subcol.prop(item, "exr_codec_16")
         
-        elif props.bake_state == 'BAKING':
-            layout.label(text = 'Baking', icon = 'RENDER_STILL')
-            if props.bake_mode == 'INDIVIDUAL':
+        else:
+            if props.bake_state == 'BAKING':
+                layout.label(text = 'Baking', icon = 'RENDER_STILL')
+                if props.bake_mode == 'INDIVIDUAL':
+                    row = layout.row()
+                    row.label(text = 'Objects:')
+                    row.label(
+                        text = 
+                            str(props.baking_obj_index) + ' of ' + 
+                            str(props.baking_obj_count)
+                    )
                 row = layout.row()
-                row.label(text = 'Objects:')
+                row.label(text = 'Maps:')
                 row.label(
                     text = 
-                        str(props.baking_obj_index) + ' of ' + 
-                        str(props.baking_obj_count)
+                        str(props.baking_map_index) + ' of ' + 
+                        str(props.baking_map_count)
                 )
-            row = layout.row()
-            row.label(text = 'Maps:')
-            row.label(
-                text = 
-                    str(props.baking_map_index) + ' of ' + 
-                    str(props.baking_map_count)
-            )
-            
-            layout.separator()
-            
-            if props.bake_mode == 'INDIVIDUAL':
+                
+                layout.separator()
+                
+                if props.bake_mode == 'INDIVIDUAL':
+                    row = layout.row()
+                    row.label(text = 'Current Object:')
+                    row.label(text = props.baking_obj_name)
+                
                 row = layout.row()
-                row.label(text = 'Current Object:')
-                row.label(text = props.baking_obj_name)
-            
-            row = layout.row()
-            row.label(text = 'Current Image:')
-            row.label(text = props.baking_map_name)
-            row = layout.row()
-            row.label(text = '')
-            row.label(text = props.baking_map_size)
-            
-            row = layout.row()
-            row.label( text = 'Type:')
-            row.label( text = props.baking_map_type)
-            layout.template_running_jobs()
-
-            # create a button that will set the props.bake_state to 'NONE'
-            # and stop the baking process
-            layout.operator("bakelab.cancel_bake", icon='CANCEL')
-
-
-        elif props.bake_state == 'BAKED':
-            layout.label(text = 'Baked', icon = 'CHECKMARK')
-            
-            if props.bake_mode == 'INDIVIDUAL':
+                row.label(text = 'Current Image:')
+                row.label(text = props.baking_map_name)
                 row = layout.row()
-                row.label(text = 'Objects:')
-                row.label(text = str(props.baking_obj_count))
-            
-            row = layout.row()
-            row.label(text = 'Total images: ')
-            if props.bake_mode == 'INDIVIDUAL':
-                row.label(text = str(props.baking_map_count*props.baking_obj_count))
-            else:
-                row.label(text = str(props.baking_map_count))
-            
-            layout.separator()
-            
-            layout.prop(props, "apply_only_selected")
-            layout.prop(props, "make_single_user")
-            layout.operator("bakelab.generate_mats", icon='MATERIAL')
-            layout.operator("bakelab.apply_ao", icon='SHADING_RENDERED')
-            layout.operator("bakelab.apply_displace", icon='RNDCURVE')
-            layout.separator()
-            layout.operator("bakelab.finish")
+                row.label(text = '')
+                row.label(text = props.baking_map_size)
+                
+                row = layout.row()
+                row.label( text = 'Type:')
+                row.label( text = props.baking_map_type)
+                layout.template_running_jobs()
+                layout.operator("bakelab.reset_ui_operator", icon='CANCEL')
+
+            elif props.bake_state == 'BAKED':
+                layout.label(text = 'Baked', icon = 'CHECKMARK')
+                
+                if props.bake_mode == 'INDIVIDUAL':
+                    row = layout.row()
+                    row.label(text = 'Objects:')
+                    row.label(text = str(props.baking_obj_count))
+                
+                row = layout.row()
+                row.label(text = 'Total images: ')
+                if props.bake_mode == 'INDIVIDUAL':
+                    row.label(text = str(props.baking_map_count*props.baking_obj_count))
+                else:
+                    row.label(text = str(props.baking_map_count))
+                
+                layout.separator()
+                
+                layout.prop(props, "apply_only_selected")
+                layout.prop(props, "make_single_user")
+                layout.operator("bakelab.generate_mats", icon='MATERIAL')
+                layout.operator("bakelab.apply_ao", icon='SHADING_RENDERED')
+                layout.operator("bakelab.apply_displace", icon='RNDCURVE')
+                layout.separator()
+                layout.operator("bakelab.finish")
+
+class ResetUIOperator(Operator):
+    bl_idname = "bakelab.reset_ui_operator"
+    bl_label = "Reset UI"
+    
+    def execute(self, context):
+        scene = context.scene
+        props = scene.BakeLabProps
+        props.bake_state = 'NONE'
+        return {'FINISHED'}
