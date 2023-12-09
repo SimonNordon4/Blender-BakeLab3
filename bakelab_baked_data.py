@@ -1,5 +1,5 @@
 import bpy
-from . import bakelab_map
+import bakelab_map
 
 from bpy.types import (
             Operator,

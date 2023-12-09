@@ -16,13 +16,18 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
-
-import importlib
+import bpy
 import os
 import sys
-import bpy
 
+# Get the directory of the current file
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
+# Add it to sys.path
+sys.path.insert(0, script_dir)
+
+# Set __package__ to the name of the directory
+__package__ = os.path.basename(script_dir)
 
 from bpy.types import (
             Operator, 
@@ -40,14 +45,9 @@ from bpy.props import (
             CollectionProperty
         )
 
-if __name__ == "__main__":
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    package_name = os.path.basename(script_dir)
-    sys.path.insert(0, script_dir)
-    __package__ = package_name
-
-from . import auto_load
+import auto_load
 if "auto_load" in locals():
+    import importlib
     importlib.reload(auto_load)
 
 bl_info = {
@@ -70,3 +70,4 @@ def unregister():
 
 if __name__ == "__main__":
     register()
+    pass

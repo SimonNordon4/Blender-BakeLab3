@@ -15,7 +15,9 @@ class AutoLoader():
 
     @staticmethod
     def init():
+        print("Initializing AutoLoader")
         AutoLoader.modules = AutoLoader.get_all_submodules(Path(__file__).parent)
+        print("Found modules:", AutoLoader.modules)
         AutoLoader.ordered_classes = AutoLoader.get_ordered_classes_to_register(AutoLoader.modules)
 
     @staticmethod
@@ -57,9 +59,15 @@ class AutoLoader():
     @staticmethod
     def iter_submodules(path, package_name):
         for name in sorted(AutoLoader.iter_submodule_names(path)):
-            module = importlib.import_module("." + name, package_name)
+            try:
+                module = importlib.import_module("." + name, package_name)
+                print("Imported", module)
+            except:
+                print("Failed to import", name)
+                continue
             try:
                 importlib.reload(module)
+                print("Reloaded", module)
             except:
                 pass
             yield module
