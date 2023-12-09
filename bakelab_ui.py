@@ -1,5 +1,6 @@
 from bpy.types import (
-            Panel
+            Panel,
+            Operator
         )
 
 class BakeLabUI(Panel):
@@ -9,6 +10,7 @@ class BakeLabUI(Panel):
     bl_region_type = 'UI'
     bl_context = "objectmode"
     bl_category = "BakeLab"
+    bl_order = 1
 
     def draw(self, context):
         scene = context.scene
@@ -254,6 +256,8 @@ class BakeLabUI(Panel):
                 row.label( text = 'Type:')
                 row.label( text = props.baking_map_type)
                 layout.template_running_jobs()
+                layout.operator("bakelab.reset_ui_operator", icon='CANCEL')
+
             elif props.bake_state == 'BAKED':
                 layout.label(text = 'Baked', icon = 'CHECKMARK')
                 
@@ -278,3 +282,13 @@ class BakeLabUI(Panel):
                 layout.operator("bakelab.apply_displace", icon='RNDCURVE')
                 layout.separator()
                 layout.operator("bakelab.finish")
+
+class ResetUIOperator(Operator):
+    bl_idname = "bakelab.reset_ui_operator"
+    bl_label = "Reset UI"
+    
+    def execute(self, context):
+        scene = context.scene
+        props = scene.BakeLabProps
+        props.bake_state = 'NONE'
+        return {'FINISHED'}

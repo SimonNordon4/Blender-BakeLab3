@@ -35,35 +35,16 @@ if __name__ == "__main__":
     sys.path.insert(0, script_dir)
     __package__ = package_name
 
-
-
-
-
 from . import auto_load
 if "auto_load" in locals():
     importlib.reload(auto_load)
-
-
-
-
 
 auto_load.AutoLoader.init()
 
 def register():
     auto_load.AutoLoader.register()
 
-    from . import bakelab_properties
-    bpy.types.Scene.BakeLabProps = PointerProperty(type = bakelab_properties.BakeLabProperties)
-    # bpy.types.Scene.BakeLabMaps = CollectionProperty(type = bakelab_map.BakeLabMap)
-    # bpy.types.Scene.BakeLab_Data = CollectionProperty(type = bakelab_baked_data.BakeLab_BakedData)
-    # bpy.types.Scene.BakeLabMapIndex = IntProperty(name = 'BakeLab Map List Index')
-
 def unregister():
-    # del bpy.types.Scene.BakeLabMapIndex
-    # del bpy.types.Scene.BakeLab_Data
-    # del bpy.types.Scene.BakeLabMaps
-    # del bpy.types.Scene.BakeLabProps 
-
     auto_load.AutoLoader.unregister()
 
 if __name__ == "__main__":

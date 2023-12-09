@@ -20,7 +20,6 @@ class AutoLoader():
 
     @staticmethod
     def register():
-        print("Registering")
         for cls in AutoLoader.ordered_classes:
             print("Registering", cls)
             bpy.utils.register_class(cls)
@@ -31,8 +30,12 @@ class AutoLoader():
             if hasattr(module, "register"):
                 module.register()
 
+        AutoLoader.register_scene_properties()
+
     @staticmethod
     def unregister():
+        AutoLoader.unregister_scene_properties()
+
         if AutoLoader.ordered_classes is None:
             return
         for cls in reversed(AutoLoader.ordered_classes):
@@ -173,3 +176,28 @@ class AutoLoader():
                     unsorted.append(value)
             deps_dict = {value : deps_dict[value] - sorted_values for value in unsorted}
         return sorted_list
+    
+    # Scene Properties
+    # #################################################
+    @staticmethod
+    def register_scene_properties():
+        from bpy.props import (
+            PointerProperty,
+            CollectionProperty,
+            IntProperty,
+        )
+        from . import bakelab_properties
+        from . import bakelab_map
+        from . import bakelab_baked_data
+        bpy.types.Scene.BakeLabProps = PointerProperty(type = bakelab_properties.BakeLabProperties)
+        bpy.types.Scene.BakeLabMaps = CollectionProperty(type = bakelab_map.BakeLabMap)
+        bpy.types.Scene.BakeLab_Data = CollectionProperty(type = bakelab_baked_data.BakeLab_BakedData)
+        bpy.types.Scene.BakeLabMapIndex = IntProperty(name = 'BakeLab Map List Index')
+
+    @staticmethod
+    def unregister_scene_properties():
+        del bpy.types.Scene.BakeLabMapIndex
+        del bpy.types.Scene.BakeLab_Data
+        del bpy.types.Scene.BakeLabMaps
+        del bpy.types.Scene.BakeLabProps
+
