@@ -45,10 +45,10 @@ from bpy.props import (
             CollectionProperty
         )
 
-import auto_load
-if "auto_load" in locals():
+import bakelab_loader
+if "bakelab_loader" in locals():
     import importlib
-    importlib.reload(auto_load)
+    importlib.reload(bakelab_loader)
 
 bl_info = {
     "name" : "BakeLab",
@@ -60,14 +60,11 @@ bl_info = {
     "category" : "Baking"
 }
 
-auto_load.AutoLoader.init()
-
 def register():
-    auto_load.AutoLoader.register()
+    bakelab_loader.register()
 
 def unregister():
-    auto_load.AutoLoader.unregister()
+    bakelab_loader.unregister()
 
 if __name__ == "__main__":
     register()
-    pass

@@ -1,5 +1,5 @@
 import bpy
-from . import auto_load
+import bakelab_loader
 
 from bpy.types import (
         Operator,
@@ -10,9 +10,8 @@ class ReloadOperator(bpy.types.Operator):
     bl_label = "Reload Auto-Loader"
     
     def execute(self, context):
-        auto_load.AutoLoader.unregister()
-        auto_load.AutoLoader.init()
-        auto_load.AutoLoader.register()
+        bakelab_loader.unregister()
+        bakelab_loader.register()
         return {'FINISHED'}
 
 class UninstallOperator(bpy.types.Operator):
@@ -20,7 +19,7 @@ class UninstallOperator(bpy.types.Operator):
     bl_label = "Uninstall Addon"
     
     def execute(self, context):
-        auto_load.AutoLoader.unregister()
+        bakelab_loader.unregister()
         return {'FINISHED'}
     
 class BakeLabDeveloperPanel(Panel):

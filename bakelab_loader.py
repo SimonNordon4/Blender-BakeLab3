@@ -12,6 +12,8 @@ from bpy.props import (
 script_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, script_dir)
 
+is_dev = True
+
 import bakelab_bake
 import bakelab_baked_data
 import bakelab_map
@@ -51,11 +53,36 @@ classes = (
     bakelab_ui.BakeLabUI
 )
 
+if is_dev:
+    import bakelab_dev
+    if "bakelab_dev" in locals():
+        importlib.reload(bakelab_dev)
+        
+    classes += (
+        bakelab_dev.ReloadOperator,
+        bakelab_dev.UninstallOperator,
+        bakelab_dev.BakeLabDeveloperPanel
+    )
+
+
 def register():
     print("Registering..")
+    failed_classes = []
     for cls in classes:
-        print("Registered", cls)
-        bpy.utils.register_class(cls)
+        try:
+            bpy.utils.register_class(cls)
+            print("Registered", cls)
+        except Exception as e:
+            print(f"Failed to register {cls} due to {str(e)}")
+            failed_classes.append(cls)
+
+    # Try to register failed classes again
+    for cls in failed_classes:
+        try:
+            bpy.utils.register_class(cls)
+            print("Registered", cls)
+        except Exception as e:
+            print(f"Failed to register {cls} again due to {str(e)}")
 
     bpy.types.Scene.BakeLabProps = PointerProperty(type = bakelab_properties.BakeLabProperties)
     bpy.types.Scene.BakeLabMaps = CollectionProperty(type = bakelab_map.BakeLabMap)

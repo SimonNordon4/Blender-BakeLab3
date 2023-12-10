@@ -7,20 +7,19 @@ import pkgutil
 import importlib
 from pathlib import Path
 
-
-blender_version = bpy.app.version
+bpy_version = bpy.app.version
 modules = None
 ordered_classes = None
 
 def init():
+    global modules, ordered_classes
     print("Initializing AutoLoader")
     modules = get_all_submodules(Path(__file__).parent)
     print("Found modules:", modules)
     ordered_classes = get_ordered_classes_to_register(modules)
     
-
 def register():
-    global 
+    global modules, ordered_classes
     for cls in ordered_classes:
         print("Registering", cls)
         bpy.utils.register_class(cls)
@@ -32,6 +31,7 @@ def register():
     register_scene_properties()
     
 def unregister():
+    global modules, ordered_classes
     unregister_scene_properties()
     if ordered_classes is None:
         return
@@ -44,11 +44,8 @@ def unregister():
         if hasattr(module, "unregister"):
             module.unregister()
             
-# Import modules
-#################################################
 def get_all_submodules(directory):
     return list(iter_submodules(directory, directory.name))
-
 
 def iter_submodules(path, package_name):
     for name in sorted(iter_submodule_names(path)):
@@ -58,32 +55,18 @@ def iter_submodules(path, package_name):
         except:
             print("Failed to import", name)
             continue
-        try:
-            importlib.reload(module)
-            print("Reloaded", module)
-        except:
-            pass
         yield module
-        
-        
-def iter_submodule_names(path, root=""):
-    for _, module_name, is_package in pkgutil.iter_modules([str(path)]):
-        if is_package:
-            sub_path = path / module_name
-            sub_root = root + module_name + "."
-            print("Found submodule", sub_root)
-            yield from iter_submodule_names(sub_path, sub_root)
-        else:
-            yield root + module_name
-            print("Found module", root + module_name)
+        if module.__path__:
+            yield from iter_submodules(module.__path__[0], module.__name__)
             
-            
-# Find classes to register
-#################################################
-
+def iter_submodule_names(path):
+    for _, name, ispkg in pkgutil.iter_modules([path]):
+        if ispkg:
+            continue
+        yield name
+        
 def get_ordered_classes_to_register(modules):
     return toposort(get_register_deps_dict(modules))
-
 
 def get_register_deps_dict(modules):
     my_classes = set(iter_my_classes(modules))
@@ -92,7 +75,6 @@ def get_register_deps_dict(modules):
     for cls in my_classes:
         deps_dict[cls] = set(iter_my_register_deps(cls, my_classes, my_classes_by_idname))
     return deps_dict
-
 
 def iter_my_register_deps(cls, my_classes, my_classes_by_idname):
     yield from iter_my_deps_from_annotations(cls, my_classes)
@@ -106,7 +88,6 @@ def iter_my_deps_from_annotations(cls, my_classes):
             if dependency in my_classes:
                 yield dependency
                 
-                
 def get_dependency_from_annotation(value):
     if blender_version >= (2, 93):
         if isinstance(value, bpy.props._PropertyDeferred):
@@ -116,7 +97,6 @@ def get_dependency_from_annotation(value):
             if value[0] in (bpy.props.PointerProperty, bpy.props.CollectionProperty):
                 return value[1]["type"]
     return None
-
 
 def iter_my_deps_from_parent_id(cls, my_classes_by_idname):
     if bpy.types.Panel in cls.__bases__:
@@ -146,7 +126,6 @@ def get_classes_in_modules(modules):
             classes.add(cls)
     return classes
 
-
 def iter_classes_in_module(module):
     for value in module.__dict__.values():
         if inspect.isclass(value):
@@ -162,9 +141,6 @@ def get_register_base_types():
         "Gizmo", "GizmoGroup",
     ])
     
-    
-# Find order to register to solve dependencies
-#################################################
 def toposort(deps_dict):
     sorted_list = []
     sorted_values = set()
@@ -179,9 +155,6 @@ def toposort(deps_dict):
         deps_dict = {value : deps_dict[value] - sorted_values for value in unsorted}
     return sorted_list
 
-
-# Scene Properties
-# #################################################
 def register_scene_properties():
     from bpy.props import (
         PointerProperty,
