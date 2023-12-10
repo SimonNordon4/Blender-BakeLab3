@@ -20,6 +20,11 @@ from math import log2
 from os.path import abspath, join, exists
 
 import bakelab_tools
+from bakelab_tools import (
+            SelectObject,
+            SelectObjects,
+            IsValidMesh
+        )
     
 class Baker(Operator):
     """Bake"""

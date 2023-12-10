@@ -12,8 +12,6 @@ from bpy.props import (
 script_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, script_dir)
 
-is_dev = True
-
 import bakelab_bake
 import bakelab_baked_data
 import bakelab_map
@@ -24,6 +22,16 @@ import bakelab_ui
 import bakelab_uv
 
 if "bpy" in locals():
+    importlib.reload(bakelab_bake)
+    importlib.reload(bakelab_baked_data)
+    importlib.reload(bakelab_map)
+    importlib.reload(bakelab_post)
+    importlib.reload(bakelab_properties)
+    importlib.reload(bakelab_tools)
+    importlib.reload(bakelab_ui)
+    importlib.reload(bakelab_uv)
+    
+def reload_modules():
     importlib.reload(bakelab_bake)
     importlib.reload(bakelab_baked_data)
     importlib.reload(bakelab_map)
@@ -50,20 +58,9 @@ classes = (
     bakelab_baked_data.BakeMapData,
     bakelab_baked_data.BakeLab_BakedData,
     bakelab_map.BakeLabShowPassPresets,
-    bakelab_ui.BakeLabUI
+    bakelab_ui.BakeLabUI,
+    bakelab_ui.ResetUIOperator
 )
-
-if is_dev:
-    import bakelab_dev
-    if "bakelab_dev" in locals():
-        importlib.reload(bakelab_dev)
-        
-    classes += (
-        bakelab_dev.ReloadOperator,
-        bakelab_dev.UninstallOperator,
-        bakelab_dev.BakeLabDeveloperPanel
-    )
-
 
 def register():
     print("Registering..")

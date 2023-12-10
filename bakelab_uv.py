@@ -13,6 +13,10 @@ from bpy.props import (
         )
 
 import bakelab_tools
+from bakelab_tools import (
+            SelectObjects,
+            IsValidMesh
+        )
 
 def SelectObject(obj):
     bpy.ops.object.select_all(action = 'DESELECT')

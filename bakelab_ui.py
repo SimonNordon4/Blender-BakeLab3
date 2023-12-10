@@ -4,7 +4,7 @@ from bpy.types import (
         )
 
 class BakeLabUI(Panel):
-    bl_label = "BakeLab"
+    bl_label = "BakeLab1"
     bl_space_type = 'VIEW_3D'
     bl_idname = "BAKELAB_PT_ui"
     bl_region_type = 'UI'
@@ -222,6 +222,7 @@ class BakeLabUI(Panel):
         else:
             if props.bake_state == 'BAKING':
                 layout.label(text = 'Baking', icon = 'RENDER_STILL')
+                
                 if props.bake_mode == 'INDIVIDUAL':
                     row = layout.row()
                     row.label(text = 'Objects:')
@@ -257,6 +258,7 @@ class BakeLabUI(Panel):
                 row.label( text = props.baking_map_type)
                 layout.template_running_jobs()
                 layout.operator("bakelab.reset_ui_operator", icon='CANCEL')
+                
 
             elif props.bake_state == 'BAKED':
                 layout.label(text = 'Baked', icon = 'CHECKMARK')
